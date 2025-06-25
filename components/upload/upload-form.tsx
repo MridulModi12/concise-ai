@@ -116,8 +116,8 @@ export default function UploadForm() {
           });
 
           formRef.current?.reset();
-          router.push(`/summaries/${storeResult.data.id}`);
           //redirect to the [id] summary page
+          router.push(`/summaries/${storeResult.data.id}`);
         }
       }
     } catch (error) {
