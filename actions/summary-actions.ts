@@ -3,12 +3,17 @@
 import { getDbConnection } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { UTApi } from "uploadthing/server";
 
 export async function deleteSummaryAction({
   summaryId,
+  fileKey,
 }: {
   summaryId: string;
+  fileKey: string;
 }) {
+  const utapi = new UTApi();
+
   try {
     const user = await currentUser();
     const userId = user?.id;
@@ -23,6 +28,8 @@ export async function deleteSummaryAction({
     const result = await sql`DELETE FROM pdf_summaries
     WHERE id = ${summaryId} AND user_id = ${userId}
     RETURNING id;`;
+
+    await utapi.deleteFiles(fileKey);
 
     if (result.length > 0) {
       revalidatePath("/dashboard");

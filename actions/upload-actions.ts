@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 interface PdfSummaryType {
   userId?: string;
   fileUrl: string;
+  fileKey: string;
   summary: string;
   title: string;
   fileName: string;
@@ -95,6 +96,7 @@ export async function generatePdfSummary(
 async function savePdfSummary({
   userId,
   fileUrl,
+  fileKey,
   summary,
   title,
   fileName,
@@ -104,10 +106,11 @@ async function savePdfSummary({
     const sql = await getDbConnection();
     const [savedSummary] = await sql`
       INSERT INTO pdf_summaries (
-        user_id, original_file_url, summary_text, title, file_name
+        user_id, original_file_url, file_key, summary_text, title, file_name
       ) VALUES (
         ${userId},
         ${fileUrl},
+        ${fileKey},
         ${summary},
         ${title},
         ${fileName}
@@ -123,6 +126,7 @@ async function savePdfSummary({
 
 export async function storePdfSummaryAction({
   fileUrl,
+  fileKey,
   summary,
   title,
   fileName,
@@ -144,6 +148,7 @@ export async function storePdfSummaryAction({
     savedSummary = await savePdfSummary({
       userId,
       fileUrl,
+      fileKey,
       summary,
       title,
       fileName,

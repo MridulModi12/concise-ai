@@ -17,15 +17,19 @@ import { toast } from "sonner";
 
 interface DeleteButtonProps {
   summaryId: string;
+  fileKey: string;
 }
 
-export default function DeleteButton({ summaryId }: DeleteButtonProps) {
+export default function DeleteButton({
+  summaryId,
+  fileKey,
+}: DeleteButtonProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async () => {
     startTransition(async () => {
-      const result = await deleteSummaryAction({ summaryId });
+      const result = await deleteSummaryAction({ summaryId, fileKey });
       if (!result?.success) {
         toast.error("Error", {
           description: "Failed to delete summary",

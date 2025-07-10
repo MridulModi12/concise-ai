@@ -4,8 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -59,6 +60,14 @@
 @layer utilities {
   body {
     font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 }
 
@@ -124,15 +133,15 @@
     @apply border-border;
   }
   h1 {
-    @apply text-4xl md:text-6xl xl:text-7xl font-bold;
+    @apply text-4xl font-bold md:text-6xl xl:text-7xl;
   }
 
   h2 {
-    @apply text-xl lg:text-3xl font-medium;
+    @apply text-xl font-medium lg:text-3xl;
   }
 
   h3 {
-    @apply text-2xl lg:text-4xl font-medium;
+    @apply text-2xl font-medium lg:text-4xl;
   }
 
   a {
@@ -140,7 +149,7 @@
   }
 
   button {
-    @apply hover:cursor-pointer bg-rose-600 hover:bg-rose-700;
+    @apply bg-rose-600 hover:cursor-pointer hover:bg-rose-700;
   }
 
   @keyframes gradient-x {
