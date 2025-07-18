@@ -40,8 +40,8 @@ export default function UploadForm() {
         description: err.message,
       });
     },
-    onUploadBegin: (file) => {
-      console.log("upload has begun for", file);
+    onUploadBegin: (data) => {
+      console.log("upload has begun for", data);
     },
   });
 
@@ -55,8 +55,6 @@ export default function UploadForm() {
 
       //validating the fields
       const validatedFields = schema.safeParse({ file });
-
-      console.log(validatedFields);
 
       if (!validatedFields.success) {
         toast.error("Something went wrong", {
@@ -73,8 +71,8 @@ export default function UploadForm() {
       });
 
       //upload the file to uploadthing
-      const resp = await startUpload([file]);
-      if (!resp) {
+      const uploadResponse = await startUpload([file]);
+      if (!uploadResponse) {
         toast.error("Something went wrong", {
           description: "Please use a different file",
         });
@@ -89,10 +87,14 @@ export default function UploadForm() {
 
       //parse the pdf using langchain
       //Summarize the pdf using AI
-      const result = await generatePdfSummary(resp);
+      const uploadFileUrl = uploadResponse[0].serverData.fileUrl;
+      const result = await generatePdfSummary({
+        fileUrl: uploadFileUrl,
+        fileName: uploadResponse[0].serverData.fileName,
+      });
       toast.dismiss(processingLoader);
 
-      const { data = null, message = null } = result || {};
+      const { data = null } = result || {};
 
       if (data) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -105,8 +107,8 @@ export default function UploadForm() {
           //save the summary to the database
           storeResult = await storePdfSummaryAction({
             summary: data.summary,
-            fileUrl: resp[0].serverData.file.ufsUrl,
-            fileKey: resp[0].key,
+            fileUrl: uploadFileUrl,
+            fileKey: uploadResponse[0].key,
             title: data.title,
             fileName: file.name,
           });

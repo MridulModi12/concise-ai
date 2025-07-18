@@ -44,6 +44,7 @@ const StatusBadge = ({ status }: { status: string }) => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function SummaryCard({ summary }: { summary: any }) {
   return (
     <div>
